@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NotificationBell from "../components/NotificationBell";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function FreelancerProfile({ onBack }) {
 
 const [profile, setProfile] = useState({
@@ -34,7 +36,7 @@ try {
   }
 
   const response = await axios.get(
-    "http://localhost:8080/api/profile",
+    `${API_URL}/api/profile`,
     {
       headers: {
         Authorization:
@@ -108,7 +110,7 @@ try {
   setSaving(true);
 
   await axios.put(
-    "http://localhost:8080/api/profile",
+    `${API_URL}/api/profile`,
     profile,
     {
       headers: {
@@ -120,7 +122,7 @@ try {
 
   // Reload the saved profile details
   const response = await axios.get(
-    "http://localhost:8080/api/profile",
+    `${API_URL}/api/profile`,
     {
       headers: {
         Authorization:

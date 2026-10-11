@@ -12,24 +12,17 @@ function FreelancerDashboard({
   loadFreelancerReviews,
   setPage
 }) {
-
-  const userName =
-    localStorage.getItem("name") || "Freelancer";
+  const userName = localStorage.getItem("name") || "Freelancer";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // ================= FREELANCER PAYMENTS =================
 
-  const [freelancerPayments, setFreelancerPayments] =
-    useState([]);
-
-  const [paymentsLoading, setPaymentsLoading] =
-    useState(true);
+  const [freelancerPayments, setFreelancerPayments] = useState([]);
+  const [paymentsLoading, setPaymentsLoading] = useState(true);
 
   useEffect(() => {
-
     const loadFreelancerPayments = async () => {
-
       try {
-
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -38,7 +31,7 @@ function FreelancerDashboard({
         }
 
         const response = await axios.get(
-          "http://localhost:8080/api/payments/my-freelancer-payments",
+          `${API_URL}/api/payments/my-freelancer-payments`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -46,28 +39,16 @@ function FreelancerDashboard({
           }
         );
 
-        setFreelancerPayments(
-          response.data || []
-        );
-
+        setFreelancerPayments(response.data || []);
       } catch (error) {
-
-        console.error(
-          "LOAD FREELANCER PAYMENTS ERROR:",
-          error
-        );
-
+        console.error("LOAD FREELANCER PAYMENTS ERROR:", error);
       } finally {
-
         setPaymentsLoading(false);
-
       }
-
     };
 
     loadFreelancerPayments();
-
-  }, []);
+  }, [API_URL]);
 
   // ================= EARNINGS CALCULATIONS =================
 
@@ -76,8 +57,7 @@ function FreelancerDashboard({
   );
 
   const totalEarnings = paidPayments.reduce(
-    (total, payment) =>
-      total + Number(payment.amount || 0),
+    (total, payment) => total + Number(payment.amount || 0),
     0
   );
 
@@ -87,128 +67,80 @@ function FreelancerDashboard({
       {/* ================= SIDEBAR ================= */}
 
       <aside className="freelancer-sidebar">
-
         <div className="sidebar-brand">
-
-          <div className="sidebar-logo">
-            F
-          </div>
-
-          <span>
-            FreelanceConnect
-          </span>
-
+          <div className="sidebar-logo">F</div>
+          <span>FreelanceConnect</span>
         </div>
 
         <nav className="sidebar-menu">
-
-          {/* DASHBOARD */}
-
           <button
             className="sidebar-item active"
-            onClick={() =>
-              setPage("freelancerDashboard")
-            }
+            onClick={() => setPage("freelancerDashboard")}
           >
             <span>⌂</span>
             Dashboard
           </button>
 
-          {/* BROWSE PROJECTS */}
-
           <button
             className="sidebar-item"
             onClick={() => {
-
               loadProjects();
-
               setPage("browseProjects");
-
             }}
           >
             <span>⌕</span>
             Browse Projects
           </button>
 
-          {/* MY PROPOSALS */}
-
           <button
             className="sidebar-item"
             onClick={() => {
-
               loadMyProposals();
-
               setPage("myProposals");
-
             }}
           >
             <span>✉</span>
             My Proposals
           </button>
 
-          {/* MY PROJECTS */}
-
           <button
             className="sidebar-item"
             onClick={() => {
-
               loadFreelancerProjects();
-
               setPage("freelancerProjects");
-
             }}
           >
             <span>▣</span>
             My Projects
           </button>
 
-          {/* REVIEWS */}
-
           <button
             className="sidebar-item"
             onClick={() => {
-
               loadFreelancerReviews();
-
               setPage("freelancerReviews");
-
             }}
           >
             <span>★</span>
             Reviews
           </button>
 
-          {/* PROFILE */}
-
           <button
             className="sidebar-item"
-            onClick={() =>
-              setPage("freelancerProfile")
-            }
+            onClick={() => setPage("freelancerProfile")}
           >
             <span>◯</span>
             My Profile
           </button>
-
         </nav>
 
-        {/* SIDEBAR BOTTOM */}
-
         <div className="sidebar-bottom">
-
           <button
             className="sidebar-item"
-            onClick={() =>
-              setDarkMode(!darkMode)
-            }
+            onClick={() => setDarkMode(!darkMode)}
           >
-            <span>
-              {darkMode ? "☀" : "☾"}
-            </span>
-
-            {darkMode
-              ? "Light Mode"
-              : "Dark Mode"}
+            <span>{darkMode ? "☀" : "☾"}</span>
+            {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
 
           <button
@@ -218,9 +150,7 @@ function FreelancerDashboard({
             <span>↪</span>
             Logout
           </button>
-
         </div>
-
       </aside>
 
       {/* ================= MAIN ================= */}
@@ -230,46 +160,24 @@ function FreelancerDashboard({
         {/* ================= TOPBAR ================= */}
 
         <header className="freelancer-topbar">
-
           <div className="topbar-title">
-
-            <span className="topbar-small">
-              Workspace
-            </span>
-
-            <h2>
-              Freelancer Dashboard
-            </h2>
-
+            <span className="topbar-small">Workspace</span>
+            <h2>Freelancer Dashboard</h2>
           </div>
 
           <div className="topbar-right">
-
             <NotificationBell />
 
             <div className="client-profile">
-
               <div className="client-avatar">
-                {userName
-                  .charAt(0)
-                  .toUpperCase()}
+                {userName.charAt(0).toUpperCase()}
               </div>
 
               <div className="client-profile-info">
-
-                <strong>
-                  {userName}
-                </strong>
-
-                <span>
-                  Freelancer
-                </span>
-
+                <strong>{userName}</strong>
+                <span>Freelancer</span>
               </div>
-
             </div>
-
-            {/* TOP-RIGHT LOGOUT BUTTON */}
 
             <button
               className="topbar-logout"
@@ -279,9 +187,7 @@ function FreelancerDashboard({
               <span>↪</span>
               Logout
             </button>
-
           </div>
-
         </header>
 
         {/* ================= CONTENT ================= */}
@@ -291,255 +197,129 @@ function FreelancerDashboard({
           {/* ================= WELCOME ================= */}
 
           <section className="client-welcome">
-
             <div>
-
-              <span className="welcome-label">
-                Welcome back 👋
-              </span>
-
-              <h1>
-                Hello, {userName}
-              </h1>
-
+              <span className="welcome-label">Welcome back 👋</span>
+              <h1>Hello, {userName}</h1>
               <p>
-                Find projects, submit proposals and
-                grow your freelance career.
+                Find projects, submit proposals and grow your freelance career.
               </p>
-
             </div>
 
             <button
               className="primary-project-button"
               onClick={() => {
-
                 loadProjects();
-
                 setPage("browseProjects");
-
               }}
             >
               <span>⌕</span>
               Browse Projects
             </button>
-
           </section>
 
           {/* ================= OVERVIEW ================= */}
 
           <section className="dashboard-section">
-
             <div className="section-heading">
-
               <div>
-
-                <h2>
-                  Overview
-                </h2>
-
-                <p>
-                  Manage your freelance activity
-                </p>
-
+                <h2>Overview</h2>
+                <p>Manage your freelance activity</p>
               </div>
-
             </div>
 
             <div className="overview-grid">
-
-              {/* BROWSE PROJECTS */}
-
               <div className="overview-card">
-
-                <div className="overview-icon blue">
-                  🔍
-                </div>
-
+                <div className="overview-icon blue">🔍</div>
                 <div className="overview-content">
-
-                  <span>
-                    Projects
-                  </span>
-
-                  <h3>
-                    Browse Projects
-                  </h3>
-
-                  <p>
-                    Find new projects that match
-                    your skills.
-                  </p>
-
+                  <span>Projects</span>
+                  <h3>Browse Projects</h3>
+                  <p>Find new projects that match your skills.</p>
                 </div>
-
                 <button
                   onClick={() => {
-
                     loadProjects();
-
                     setPage("browseProjects");
-
                   }}
                 >
                   →
                 </button>
-
               </div>
 
-              {/* PROPOSALS */}
-
               <div className="overview-card">
-
-                <div className="overview-icon purple">
-                  📄
-                </div>
-
+                <div className="overview-icon purple">📄</div>
                 <div className="overview-content">
-
-                  <span>
-                    Applications
-                  </span>
-
-                  <h3>
-                    My Proposals
-                  </h3>
-
-                  <p>
-                    Track the proposals you have
-                    submitted.
-                  </p>
-
+                  <span>Applications</span>
+                  <h3>My Proposals</h3>
+                  <p>Track the proposals you have submitted.</p>
                 </div>
-
                 <button
                   onClick={() => {
-
                     loadMyProposals();
-
                     setPage("myProposals");
-
                   }}
                 >
                   →
                 </button>
-
               </div>
 
-              {/* MY PROJECTS */}
-
               <div className="overview-card">
-
-                <div className="overview-icon blue">
-                  💼
-                </div>
-
+                <div className="overview-icon blue">💼</div>
                 <div className="overview-content">
-
-                  <span>
-                    Work
-                  </span>
-
-                  <h3>
-                    My Projects
-                  </h3>
-
-                  <p>
-                    View your current and completed
-                    projects.
-                  </p>
-
+                  <span>Work</span>
+                  <h3>My Projects</h3>
+                  <p>View your current and completed projects.</p>
                 </div>
-
                 <button
                   onClick={() => {
-
                     loadFreelancerProjects();
-
                     setPage("freelancerProjects");
-
                   }}
                 >
                   →
                 </button>
-
               </div>
-
-              {/* REVIEWS */}
 
               <div className="overview-card">
-
-                <div className="overview-icon yellow">
-                  ★
-                </div>
-
+                <div className="overview-icon yellow">★</div>
                 <div className="overview-content">
-
-                  <span>
-                    Feedback
-                  </span>
-
-                  <h3>
-                    My Reviews
-                  </h3>
-
-                  <p>
-                    See ratings and feedback from
-                    clients.
-                  </p>
-
+                  <span>Feedback</span>
+                  <h3>My Reviews</h3>
+                  <p>See ratings and feedback from clients.</p>
                 </div>
-
                 <button
                   onClick={() => {
-
                     loadFreelancerReviews();
-
                     setPage("freelancerReviews");
-
                   }}
                 >
                   →
                 </button>
-
               </div>
-
             </div>
-
           </section>
 
-          {/* ================= PROFESSIONAL MY EARNINGS ================= */}
+          {/* ================= MY EARNINGS ================= */}
 
           <section className="dashboard-section earnings-section">
-
             <div className="section-heading earnings-heading">
-
               <div>
-
-                <span className="earnings-eyebrow">
-                  FINANCIAL OVERVIEW
-                </span>
-
+                <span className="earnings-eyebrow">FINANCIAL OVERVIEW</span>
                 <h2>My Earnings</h2>
-
                 <p>
                   Track your freelance income and payment history.
                 </p>
-
               </div>
 
               <div className="earnings-live-badge">
                 <span className="earnings-live-dot"></span>
                 Payment Overview
               </div>
-
             </div>
 
             {/* EARNINGS SUMMARY */}
 
             <div className="earnings-summary-grid">
-
               <div className="earnings-summary-card earnings-total-card">
-
                 <div className="earnings-card-top">
                   <span>Total Earnings</span>
                   <div className="earnings-icon earnings-icon-blue">₹</div>
@@ -557,11 +337,9 @@ function FreelancerDashboard({
                   <span className="earnings-mini-check">✓</span>
                   Earnings from paid projects
                 </div>
-
               </div>
 
               <div className="earnings-summary-card">
-
                 <div className="earnings-card-top">
                   <span>Paid Projects</span>
                   <div className="earnings-icon earnings-icon-green">✓</div>
@@ -574,16 +352,12 @@ function FreelancerDashboard({
                 <p>Projects with successful demo payments</p>
 
                 <div className="earnings-card-bottom">
-                  <span className="earnings-status-pill">
-                    PAID
-                  </span>
+                  <span className="earnings-status-pill">PAID</span>
                   Payment status confirmed
                 </div>
-
               </div>
 
               <div className="earnings-summary-card">
-
                 <div className="earnings-card-top">
                   <span>Pending Payments</span>
                   <div className="earnings-icon earnings-icon-orange">◷</div>
@@ -600,22 +374,16 @@ function FreelancerDashboard({
                 <p>Payments awaiting confirmation</p>
 
                 <div className="earnings-card-bottom">
-                  <span className="earnings-pending-pill">
-                    PENDING
-                  </span>
+                  <span className="earnings-pending-pill">PENDING</span>
                   Awaiting payment
                 </div>
-
               </div>
-
             </div>
 
             {/* PAYMENT HISTORY */}
 
             <div className="earnings-history-card">
-
               <div className="earnings-history-header">
-
                 <div>
                   <h3>Payment History</h3>
                   <p>Review payments associated with your projects.</p>
@@ -626,30 +394,22 @@ function FreelancerDashboard({
                     ? "Loading..."
                     : `${freelancerPayments.length} records`}
                 </span>
-
               </div>
 
               {paymentsLoading ? (
-
                 <div className="earnings-empty-state">
                   <div className="earnings-loading-spinner"></div>
                   <p>Loading your payment history...</p>
                 </div>
-
               ) : freelancerPayments.length === 0 ? (
-
                 <div className="earnings-empty-state">
                   <div className="earnings-empty-icon">₹</div>
                   <h4>No payments yet</h4>
                   <p>Your project payments will appear here.</p>
                 </div>
-
               ) : (
-
                 <div className="earnings-table-wrapper">
-
                   <table className="earnings-table">
-
                     <thead>
                       <tr>
                         <th>PROJECT</th>
@@ -660,36 +420,24 @@ function FreelancerDashboard({
                     </thead>
 
                     <tbody>
-
                       {freelancerPayments.map((payment) => (
-
                         <tr key={payment.id}>
-
                           <td>
                             <div className="earnings-project-cell">
-
-                              <div className="earnings-project-icon">
-                                ↗
-                              </div>
-
+                              <div className="earnings-project-icon">↗</div>
                               <div>
-                                <strong>
-                                  Project #{payment.projectId}
-                                </strong>
-
-                                <span>
-                                  Payment ID #{payment.id}
-                                </span>
+                                <strong>Project #{payment.projectId}</strong>
+                                <span>Payment ID #{payment.id}</span>
                               </div>
-
                             </div>
                           </td>
 
                           <td>
                             <strong className="earnings-amount">
-                              ₹{Number(
-                                payment.amount || 0
-                              ).toLocaleString("en-IN")}
+                              ₹
+                              {Number(payment.amount || 0).toLocaleString(
+                                "en-IN"
+                              )}
                             </strong>
                           </td>
 
@@ -719,234 +467,114 @@ function FreelancerDashboard({
                               {payment.status}
                             </span>
                           </td>
-
                         </tr>
-
                       ))}
-
                     </tbody>
-
                   </table>
-
                 </div>
-
               )}
 
               <div className="earnings-history-footer">
                 <span>Showing all payment records</span>
                 <span>Demo transactions · No real money transferred</span>
               </div>
-
             </div>
-
           </section>
 
           {/* ================= QUICK ACTIONS ================= */}
 
           <section className="dashboard-section">
-
             <div className="section-heading">
-
               <div>
-
-                <h2>
-                  Quick Actions
-                </h2>
-
-                <p>
-                  Get things done faster
-                </p>
-
+                <h2>Quick Actions</h2>
+                <p>Get things done faster</p>
               </div>
-
             </div>
 
             <div className="quick-actions">
-
-              {/* BROWSE */}
-
               <button
                 className="quick-action-card"
                 onClick={() => {
-
                   loadProjects();
-
                   setPage("browseProjects");
-
                 }}
               >
-
-                <div className="quick-action-icon">
-                  🔍
-                </div>
-
+                <div className="quick-action-icon">🔍</div>
                 <div>
-
-                  <h3>
-                    Find Projects
-                  </h3>
-
-                  <p>
-                    Discover projects that match
-                    your skills.
-                  </p>
-
+                  <h3>Find Projects</h3>
+                  <p>Discover projects that match your skills.</p>
                 </div>
-
-                <span>
-                  →
-                </span>
-
+                <span>→</span>
               </button>
-
-              {/* PROPOSALS */}
 
               <button
                 className="quick-action-card"
                 onClick={() => {
-
                   loadMyProposals();
-
                   setPage("myProposals");
-
                 }}
               >
-
-                <div className="quick-action-icon">
-                  📄
-                </div>
-
+                <div className="quick-action-icon">📄</div>
                 <div>
-
-                  <h3>
-                    Track Proposals
-                  </h3>
-
-                  <p>
-                    Check the status of your
-                    submitted proposals.
-                  </p>
-
+                  <h3>Track Proposals</h3>
+                  <p>Check the status of your submitted proposals.</p>
                 </div>
-
-                <span>
-                  →
-                </span>
-
+                <span>→</span>
               </button>
-
-              {/* PROJECTS */}
 
               <button
                 className="quick-action-card"
                 onClick={() => {
-
                   loadFreelancerProjects();
-
                   setPage("freelancerProjects");
-
                 }}
               >
-
-                <div className="quick-action-icon">
-                  💼
-                </div>
-
+                <div className="quick-action-icon">💼</div>
                 <div>
-
-                  <h3>
-                    Manage Work
-                  </h3>
-
-                  <p>
-                    View and manage your
-                    ongoing projects.
-                  </p>
-
+                  <h3>Manage Work</h3>
+                  <p>View and manage your ongoing projects.</p>
                 </div>
-
-                <span>
-                  →
-                </span>
-
+                <span>→</span>
               </button>
-
-              {/* PROFILE */}
 
               <button
                 className="quick-action-card"
-                onClick={() =>
-                  setPage("freelancerProfile")
-                }
+                onClick={() => setPage("freelancerProfile")}
               >
-
-                <div className="quick-action-icon">
-                  👤
-                </div>
-
+                <div className="quick-action-icon">👤</div>
                 <div>
-
-                  <h3>
-                    Update Profile
-                  </h3>
-
-                  <p>
-                    Manage your skills and
-                    freelancer profile.
-                  </p>
-
+                  <h3>Update Profile</h3>
+                  <p>Manage your skills and freelancer profile.</p>
                 </div>
-
-                <span>
-                  →
-                </span>
-
+                <span>→</span>
               </button>
-
             </div>
-
           </section>
 
           {/* ================= INFORMATION CARD ================= */}
 
           <section className="dashboard-info">
-
-            <div className="info-icon">
-              ✨
-            </div>
+            <div className="info-icon">✨</div>
 
             <div>
-
-              <h3>
-                Grow your freelance career
-              </h3>
-
+              <h3>Grow your freelance career</h3>
               <p>
-                Discover local projects, submit
-                proposals and build your reputation
-                through successful work.
+                Discover local projects, submit proposals and build your
+                reputation through successful work.
               </p>
-
             </div>
 
             <button
               onClick={() => {
-
                 loadProjects();
-
                 setPage("browseProjects");
-
               }}
             >
               Find Projects
             </button>
-
           </section>
-
         </main>
-
       </div>
-
     </div>
   );
 }

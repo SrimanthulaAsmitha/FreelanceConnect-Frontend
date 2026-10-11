@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NotificationBell from "../components/NotificationBell";
 
+const API_URL = import.meta.env.VITE_API_URL;
 function Chat({
   project,
   setPage
@@ -31,9 +32,9 @@ function Chat({
       const token =
         localStorage.getItem("token");
 
-      const response = await axios.get(
-        `http://localhost:8080/api/messages/project/${projectId}`,
-        {
+const response = await axios.get(
+  `${API_URL}/api/messages/project/${projectId}`,
+  {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -97,9 +98,10 @@ function Chat({
 
       };
 
-      const response = await axios.post(
-        "http://localhost:8080/api/messages",
-        newMessage,
+const response = await axios.post(
+  `${API_URL}/api/messages`,
+  newMessage,
+
         {
           headers: {
             Authorization:

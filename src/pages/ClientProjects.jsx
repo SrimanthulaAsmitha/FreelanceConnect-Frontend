@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NotificationBell from "../components/NotificationBell";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function ClientProjects({
   darkMode,
   setDarkMode,
@@ -68,7 +70,7 @@ function ClientProjects({
         if (!token) return;
 
         const response = await axios.get(
-          "http://localhost:8080/api/payments/my-client-payments",
+          `${API_URL}/api/payments/my-client-payments`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -111,10 +113,13 @@ function ClientProjects({
       let payment = paymentsByProject[project.id];
 
       // Create a payment if one does not exist
-      if (!payment) {
-        const createResponse = await axios.post(
-          `http://localhost:8080/api/payments/project/${project.id}`,
-          {},
+
+if (!payment) {
+  const createResponse = await axios.post(
+    `${API_URL}/api/payments/project/${project.id}`,
+    {},
+
+
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -185,9 +190,11 @@ function ClientProjects({
 
       setProcessingPayment(projectId);
 
-      const response = await axios.put(
-        `http://localhost:8080/api/payments/${paymentId}/demo-confirm`,
-        {},
+
+const response = await axios.put(
+  `${API_URL}/api/payments/${paymentId}/demo-confirm`,
+  {},
+
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -235,9 +242,10 @@ function ClientProjects({
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:8080/api/work-submissions/project/${project.id}`,
-        {
+
+const response = await axios.get(
+  `${API_URL}/api/work-submissions/project/${project.id}`,
+  {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -281,9 +289,9 @@ function ClientProjects({
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:8080/api/work-submissions/download/${submittedWork.id}`,
-        {
+const response = await axios.get(
+  `${API_URL}/api/work-submissions/download/${submittedWork.id}`,
+  {
           responseType: "blob",
           headers: {
             Authorization: `Bearer ${token}`

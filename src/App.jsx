@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import Chat from "./components/Chat";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -20,6 +19,13 @@ import ClientProjects from "./pages/ClientProjects";
 import ClientProposals from "./pages/ClientProposals";
 import Applicants from "./pages/Applicants";
 import ClientReviews from "./pages/ClientReviews";
+
+/* ================= API CONFIGURATION ================= */
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+axios.defaults.baseURL = API_URL;
 
 function App() {
 
@@ -105,26 +111,23 @@ function App() {
 
   }, [darkMode]);
 
-
   /* ================= LOAD PAGE PROJECTS ================= */
 
-  /* ================= LOAD PAGE PROJECTS ================= */
+  useEffect(() => {
 
-useEffect(() => {
+    if (page === "freelancerProjects") {
+      loadFreelancerProjects();
+    }
 
-  if (page === "freelancerProjects") {
-    loadFreelancerProjects();
-  }
+    if (page === "myProjects") {
+      loadMyProjects();
+    }
 
-  if (page === "myProjects") {
-    loadMyProjects();
-  }
+    if (page === "myProposals") {
+      loadMyProposals();
+    }
 
-  if (page === "myProposals") {
-    loadMyProposals();
-  }
-
-}, [page]);
+  }, [page]);
 
 
   /* ================= REGISTER ================= */
@@ -142,7 +145,7 @@ useEffect(() => {
     try {
 
       await axios.post(
-        "http://localhost:8080/api/users/register",
+        "/api/users/register",
         {
           name,
           email,
@@ -196,7 +199,7 @@ useEffect(() => {
 
       const response =
         await axios.post(
-          "http://localhost:8080/api/auth/login",
+          "/api/auth/login",
           {
             email,
             password
@@ -299,7 +302,7 @@ useEffect(() => {
 
       const response =
         await axios.get(
-          "http://localhost:8080/api/projects",
+          "/api/projects",
           {
             headers: {
               Authorization:
@@ -335,7 +338,7 @@ useEffect(() => {
 
       const response =
         await axios.get(
-          "http://localhost:8080/api/proposals",
+          "/api/proposals",
           {
             headers: {
               Authorization:
@@ -373,7 +376,7 @@ useEffect(() => {
 
       const response =
         await axios.get(
-          "http://localhost:8080/api/projects/client-projects",
+          "/api/projects/client-projects",
           {
             headers: {
               Authorization:
@@ -421,7 +424,7 @@ useEffect(() => {
 
       const response =
         await axios.get(
-          "http://localhost:8080/api/projects/my-projects",
+          "/api/projects/my-projects",
           {
             headers: {
               Authorization:
@@ -494,7 +497,7 @@ useEffect(() => {
 
       const response =
         await axios.get(
-          "http://localhost:8080/api/reviews",
+          "/api/reviews",
           {
             headers: {
               Authorization:
@@ -540,16 +543,19 @@ useEffect(() => {
 
   /* ================= LOAD MY PROPOSALS ================= */
 
-
 const loadMyProposals = async () => {
   try {
     const token = localStorage.getItem("token");
     const freelancerEmail = localStorage.getItem("email");
 
-    console.log("Freelancer email:", freelancerEmail);
+    if (!token || !freelancerEmail) {
+      console.error("Missing login token or freelancer email.");
+      setMyProposals([]);
+      return;
+    }
 
     const response = await axios.get(
-      `http://localhost:8080/api/proposals/freelancer/${encodeURIComponent(freelancerEmail)}`,
+      `/api/proposals/freelancer/${encodeURIComponent(freelancerEmail)}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -557,12 +563,15 @@ const loadMyProposals = async () => {
       }
     );
 
-    console.log(
-  "Proposals received:",
-  JSON.stringify(response.data, null, 2)
-);
+    const proposals = Array.isArray(response.data)
+      ? response.data
+      : [];
 
-    setMyProposals(response.data);
+    console.log("Total proposals received:", proposals.length);
+    console.log("Proposal IDs:", proposals.map((proposal) => proposal.id));
+    console.log("Proposals received:", proposals);
+
+    setMyProposals(proposals);
   } catch (error) {
     console.error(
       "MY PROPOSALS ERROR:",
@@ -570,7 +579,6 @@ const loadMyProposals = async () => {
     );
   }
 };
-
 
   /* ================= LOAD APPLICANTS ================= */
 
@@ -585,7 +593,7 @@ const loadMyProposals = async () => {
 
       const response =
         await axios.get(
-          `http://localhost:8080/api/proposals/project/${projectId}`,
+          `/api/proposals/project/${projectId}`,
           {
             headers: {
               Authorization:
@@ -644,7 +652,7 @@ const loadMyProposals = async () => {
       }
 
       await axios.put(
-        `http://localhost:8080/api/proposals/${proposal.id}/accept`,
+        `/api/proposals/${proposal.id}/accept`,
         {},
         {
           headers: {
@@ -686,7 +694,7 @@ const loadMyProposals = async () => {
         localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:8080/api/projects/${projectId}/work-completed`,
+        `/api/projects/${projectId}/work-completed`,
         {},
         {
           headers: {
@@ -738,7 +746,7 @@ const loadMyProposals = async () => {
       }
 
       await axios.put(
-        `http://localhost:8080/api/projects/${project.id}/complete`,
+        `/api/projects/${project.id}/complete`,
         {},
         {
           headers: {
@@ -780,7 +788,7 @@ const loadMyProposals = async () => {
 
       const response =
         await axios.get(
-          "http://localhost:8080/api/reviews",
+          "/api/reviews",
           {
             headers: {
               Authorization:
@@ -842,7 +850,7 @@ const loadMyProposals = async () => {
         localStorage.getItem("email");
 
       await axios.post(
-        "http://localhost:8080/api/reviews",
+        "/api/reviews",
         {
           projectId:
             reviewProject.id,
@@ -983,7 +991,7 @@ const loadMyProposals = async () => {
         localStorage.getItem("email");
 
       await axios.post(
-        "http://localhost:8080/api/proposals",
+        "/api/proposals",
         {
           projectId:
             selectedProject.id,
@@ -1082,7 +1090,7 @@ const loadMyProposals = async () => {
         localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:8080/api/projects",
+        "/api/projects",
         {
           title:
             projectTitle,

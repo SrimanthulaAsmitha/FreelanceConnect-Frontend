@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import NotificationBell from "../components/NotificationBell";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Applicants({
   darkMode,
   setDarkMode,
@@ -35,10 +37,10 @@ function Applicants({
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:8080/api/profile/freelancer/${encodeURIComponent(
-          proposal.freelancerEmail
-        )}`,
+const response = await axios.get(
+  `${API_URL}/api/profile/freelancer/${encodeURIComponent(
+    proposal.freelancerEmail
+  )}`,
         {
           headers: {
             Authorization:

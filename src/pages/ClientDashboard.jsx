@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NotificationBell from "../components/NotificationBell";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function ClientDashboard({
   darkMode,
   setDarkMode,
@@ -31,7 +33,7 @@ function ClientDashboard({
         }
 
         const response = await axios.get(
-          "http://localhost:8080/api/payments/my-client-payments",
+          `${API_URL}/api/payments/my-client-payments`,
           {
             headers: {
               Authorization: `Bearer ${token}`
