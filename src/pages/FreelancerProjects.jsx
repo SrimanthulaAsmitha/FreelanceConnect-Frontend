@@ -109,14 +109,14 @@ const token = localStorage.getItem("token");
     return;
   }
 
-  const response = await axios.get(
-    `${API_URL}/api/payments/my-freelancer-payments`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+ const response = await axios.get(
+  `${API_URL}/api/payments/my-freelancer-payments`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-  );
+  }
+);
 
   const paymentMap = {};
 
