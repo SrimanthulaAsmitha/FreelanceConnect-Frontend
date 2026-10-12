@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const API_URL =
-  (import.meta.env.VITE_API_URL ||
-    "https://freelanceconnect-backend.onrender.com").replace(/\/+$/, "");
+const API_URL = (
+  import.meta.env.VITE_API_URL ||
+  "https://freelanceconnect-backend.onrender.com"
+).replace(/\/+$/, "");
 
 function Login({
   email,
@@ -32,8 +33,6 @@ email,
 password
 }
 );
-
-
       localStorage.setItem(
         "token",
         response.data.token

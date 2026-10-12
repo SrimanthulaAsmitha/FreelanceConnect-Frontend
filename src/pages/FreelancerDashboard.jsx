@@ -17,7 +17,7 @@ function FreelancerDashboard({
   setPage
 }) {
   const userName = localStorage.getItem("name") || "Freelancer";
-  const API_URL = import.meta.env.VITE_API_URL;
+
 
   // ================= FREELANCER PAYMENTS =================
 
