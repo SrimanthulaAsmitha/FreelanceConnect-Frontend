@@ -9,7 +9,7 @@ function NotificationBell() {
   const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
 
- const API_URL = (
+const API_URL = (
   import.meta.env.VITE_API_URL ||
   "https://freelanceconnect-backend.onrender.com"
 ).replace(/\/+$/, "");
