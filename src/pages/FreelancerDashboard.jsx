@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import NotificationBell from "../components/NotificationBell";
-const API_URL = (
-  import.meta.env.VITE_API_URL ||
-  "https://freelanceconnect-backend.onrender.com"
-).replace(/\/+$/, "");
+const API_URL = "https://freelanceconnect-backend.onrender.com";
 
 function FreelancerDashboard({
   darkMode,
@@ -34,18 +31,22 @@ function FreelancerDashboard({
           return;
         }
 
-        const response = await axios.get(
-          `${API_URL}/api/payments/my-freelancer-payments`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+        const paymentUrl = `${API_URL}/api/payments/my-freelancer-payments`;
+        console.log("Freelancer payment URL:", paymentUrl);
+
+        const response = await axios.get(paymentUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
+        });
 
         setFreelancerPayments(response.data || []);
       } catch (error) {
-        console.error("LOAD FREELANCER PAYMENTS ERROR:", error);
+        console.error(
+          "LOAD FREELANCER PAYMENTS ERROR:",
+          error.response?.status,
+          error.response?.data || error.message
+        );
       } finally {
         setPaymentsLoading(false);
       }
