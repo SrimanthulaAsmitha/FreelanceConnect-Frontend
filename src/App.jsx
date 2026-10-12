@@ -23,7 +23,7 @@ import ClientReviews from "./pages/ClientReviews";
 /* ================= API CONFIGURATION ================= */
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080";
+  import.meta.env.VITE_API_URL || "https://freelanceconnect-backend.onrender.com";
 
 axios.defaults.baseURL = API_URL;
 
@@ -539,8 +539,6 @@ function App() {
       console.log(error);
     }
   };
-
-
   /* ================= LOAD MY PROPOSALS ================= */
 
 const loadMyProposals = async () => {
